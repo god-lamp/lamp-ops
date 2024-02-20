@@ -3,6 +3,8 @@ package com.lamp.devops.entity.table;
 import com.mybatisflex.core.query.QueryColumn;
 import com.mybatisflex.core.table.TableDef;
 
+import java.io.Serial;
+
 
 /**
  *  表定义层。
@@ -12,6 +14,7 @@ import com.mybatisflex.core.table.TableDef;
  */
 public class SysMenuTableDef extends TableDef {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
