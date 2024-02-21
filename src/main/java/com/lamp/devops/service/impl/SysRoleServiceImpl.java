@@ -17,6 +17,7 @@ import com.mybatisflex.spring.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -46,13 +47,13 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     }
 
     @Override
-    public List<SysRole> findRoleByUsername(String username) {
-        return this.list(
+    public Set<SysRole> findRoleByUsername(String username) {
+        return new HashSet<>(this.list(
                 QueryWrapper.create().select(SYS_ROLE.ALL_COLUMNS).from(SYS_ACCOUNT)
                         .leftJoin(SYS_ACCOUNT_ROLE).on(SYS_ACCOUNT_ROLE.ACCOUNT_ID.eq(SYS_ACCOUNT.ID))
-                        .leftJoin(SYS_ACCOUNT_ROLE).on(SYS_ACCOUNT_ROLE.ROLE_ID.eq(SYS_ROLE.ID))
+                        .leftJoin(SYS_ROLE).on(SYS_ACCOUNT_ROLE.ROLE_ID.eq(SYS_ROLE.ID))
                         .where(SYS_ACCOUNT.USERNAME.eq(username))
-        );
+        ));
     }
 
     @Override
