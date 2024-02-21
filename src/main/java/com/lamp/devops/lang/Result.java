@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class Result<T> {
     private long code;
     private String message;
-    private Object result;
+    private Object data;
 
     /**
      * 成功返回结果

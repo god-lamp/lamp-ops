@@ -5,7 +5,6 @@ import com.lamp.devops.lang.IPage;
 import com.lamp.devops.model.dto.SysRoleDto;
 import com.mybatisflex.core.service.IService;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -31,7 +30,7 @@ public interface ISysRoleService extends IService<SysRole> {
      * @param username 角色名
      * @return 角色信息
      */
-    List<SysRole> findRoleByUsername(String username);
+    Set<SysRole> findRoleByUsername(String username);
 
     /**
      * 根据角色ID查询角色信息
