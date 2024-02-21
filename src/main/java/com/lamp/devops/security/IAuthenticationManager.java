@@ -62,10 +62,14 @@ public class IAuthenticationManager implements AuthenticationManager, Authorizat
 
     @Override
     public AuthorizationDecision check(Supplier<Authentication> authentication, RequestAuthorizationContext requestAuthorizationContext) {
-        // 获取请求路径,获取HttpServletRequest
+        // 获取请求路径，获取HttpServletRequest
         HttpServletRequest request = requestAuthorizationContext.getRequest();
 
         if (Constant.WHITES.stream().map(path -> new AntPathRequestMatcher(path.getValue(), path.getKey().toString())).anyMatch(matcher -> matcher.matches(request))) {
+            return new AuthorizationDecision(true);
+        }
+
+        if (Constant.AUTHENTICATION_LIST.stream().map(path -> new AntPathRequestMatcher(path.getValue(), path.getKey().toString())).anyMatch(matcher -> matcher.matches(request))) {
             return new AuthorizationDecision(true);
         }
         String uri = request.getServletPath();
