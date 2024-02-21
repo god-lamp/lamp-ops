@@ -75,8 +75,13 @@ public class IAuthenticationManager implements AuthenticationManager, Authorizat
         String uri = request.getServletPath();
         log.info("uri=============>{}", uri);
 
+        // 去掉最后一个字符是斜杠
+        if (StrUtil.endWith(uri, "/")) {
+            uri = StrUtil.replaceLast(uri, "/", "");
+        }
+
         // 根据uri获取路径的权限
-        SysMenu menu = menuService.getOne(QueryWrapper.create().where(SYS_MENU.URL.eq(StrUtil.replaceLast(uri, "/", ""))).and(SYS_MENU.METHOD.eq(request.getMethod())));
+        SysMenu menu = menuService.getOne(QueryWrapper.create().where(SYS_MENU.URL.eq(uri)).and(SYS_MENU.METHOD.eq(request.getMethod())));
         if (menu == null) {
             return new AuthorizationDecision(false);
         }
