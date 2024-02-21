@@ -3,10 +3,12 @@ package com.lamp.devops.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import com.lamp.devops.entity.SysAccount;
 import com.lamp.devops.entity.SysMenu;
+import com.lamp.devops.entity.SysRole;
 import com.lamp.devops.exception.IAuthenticationException;
 import com.lamp.devops.fastmap.IFastMap;
 import com.lamp.devops.model.dto.LoginInfo;
 import com.lamp.devops.model.dto.LoginResult;
+import com.lamp.devops.model.dto.Personal;
 import com.lamp.devops.service.ISysAccountService;
 import com.lamp.devops.service.ISysAuthenticationService;
 import com.lamp.devops.service.ISysMenuService;
@@ -26,13 +28,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.header.CacheControlServerHttpHeadersWriter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -70,12 +72,8 @@ public class SysAuthenticationServiceImpl implements ISysAuthenticationService {
     }
 
     @Override
-    public String login(LoginInfo info) {
+    public Map<String, String> login(LoginInfo info) {
         SysAccount account = accountService.findAccountByUsername(info.getUsername());
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        assert attributes != null;
-        HttpServletRequest request = attributes.getRequest();
-
         String password = info.getPassword();
 
         log.info("密码对比结果:{}", passwordEncoder.matches(password, account.getPassword()));
@@ -92,7 +90,7 @@ public class SysAuthenticationServiceImpl implements ISysAuthenticationService {
         } catch (Exception ex) {
             throw new IllegalStateException(ex.getMessage());
         }
-        return TokenProviderUtil.token(info.getUsername());
+        return Map.of("token", TokenProviderUtil.token(info.getUsername()));
     }
 
     @Override
@@ -139,5 +137,14 @@ public class SysAuthenticationServiceImpl implements ISysAuthenticationService {
         LoginResult result = BeanUtil.copyProperties(account, LoginResult.class);
         result.setRoles(roleService.findRolesByAccountId(account.getId()));
         return result;
+    }
+
+    @Override
+    public Personal personalInfo(Principal principal) {
+        String username = principal.getName();
+        SysAccount account = accountService.findAccountByUsername(username);
+        Set<SysRole> roles = roleService.findRoleByUsername(username);
+        account.setRoles(roles.stream().map(SysRole::getCode).collect(Collectors.toSet()));
+        return BeanUtil.toBean(account, Personal.class);
     }
 }

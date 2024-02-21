@@ -2,11 +2,13 @@ package com.lamp.devops.service;
 
 import com.lamp.devops.model.dto.LoginInfo;
 import com.lamp.devops.model.dto.LoginResult;
+import com.lamp.devops.model.dto.Personal;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.security.Principal;
+import java.util.Map;
 
 /**
  * @author god-lamp
@@ -19,7 +21,7 @@ public interface ISysAuthenticationService extends UserDetailsService {
      * @param info 登录输入信息
      * @return 登录成功的响应
      */
-    String login(LoginInfo info);
+    Map<String, String> login(LoginInfo info);
 
     /**
      * 退出认证
@@ -32,4 +34,12 @@ public interface ISysAuthenticationService extends UserDetailsService {
     void verify(HttpServletRequest request, HttpServletResponse response);
 
     LoginResult info(Principal principal);
+
+    /**
+     * 获取个人信息
+     *
+     * @param principal 认证主体
+     * @return 个人信息
+     */
+    Personal personalInfo(Principal principal);
 }
