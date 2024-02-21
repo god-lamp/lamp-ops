@@ -39,7 +39,7 @@ public class SysAccount implements Serializable, UserDetails {
 
     private String password;
 
-    private String icon;
+    private String avatar;
 
     private String email;
 
@@ -65,7 +65,7 @@ public class SysAccount implements Serializable, UserDetails {
 
     @Column(ignore = true)
     @JsonManagedReference
-    private Set<SysRole> roles;
+    private Set<String> roles;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
