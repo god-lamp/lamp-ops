@@ -16,7 +16,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
  * @since 2024-02-20
  */
 @Slf4j
-@RestControllerAdvice(basePackages = "com.fire.phenix.devops.controller")
+@RestControllerAdvice(basePackages = "com.lamp.devops.controller")
 public class IResponseBodyAdvice implements ResponseBodyAdvice<Object> {
     @Override
     public boolean supports(MethodParameter param, Class clazz) {
