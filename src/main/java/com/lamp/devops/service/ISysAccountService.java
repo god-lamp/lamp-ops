@@ -9,7 +9,7 @@ import com.mybatisflex.core.service.IService;
 import java.util.List;
 
 /**
- *  服务层。
+ * 服务层。
  *
  * @author god-lamp
  * @since 2024-02-20
@@ -18,12 +18,12 @@ public interface ISysAccountService extends IService<SysAccount> {
     /**
      * 查询所有账户信息
      *
-     * @param num       分页对象
-     * @param size      关键信息
+     * @param page      页码
+     * @param size      每页大小
      * @param condition 查询条件
      * @return 分页对象
      */
-    IPage<SysAccount> findAllAccounts(Integer num, Integer size, String condition);
+    IPage<SysAccount> findAllAccounts(Integer page, Integer size, String condition);
 
     /**
      * 根据用户名查询用户信息

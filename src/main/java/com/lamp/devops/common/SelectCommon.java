@@ -20,13 +20,13 @@ public class SelectCommon<T> {
     /**
      * 分页查询所有信息
      *
-     * @param num       页码
+     * @param page      页码
      * @param size      每页大小
      * @param condition 查询条件
      * @param service   查询实体
      * @return 分页对象
      */
-    public Page<T> findAll(Integer num, Integer size, String condition, IService<T> service) {
+    public Page<T> findAll(Integer page, Integer size, String condition, IService<T> service) {
         QueryWrapper wrapper = QueryWrapper.create().where("1 = 1");
         if (StrUtil.isNotBlank(condition)) {
             Map<String, Object> map = ParamUtil.split(condition);
@@ -35,6 +35,6 @@ public class SelectCommon<T> {
             }
             log.info("构造的查询条件: {}", wrapper);
         }
-        return service.page(new Page<>(num, size), wrapper);
+        return service.page(new Page<>(page, size), wrapper);
     }
 }

@@ -44,8 +44,8 @@ public class SysAccountServiceImpl extends ServiceImpl<SysAccountMapper, SysAcco
     private String defaultPasswd;
 
     @Override
-    public IPage<SysAccount> findAllAccounts(Integer num, Integer size, String condition) {
-        return new IPage<>(new SelectCommon<SysAccount>().findAll(num, size, condition, this));
+    public IPage<SysAccount> findAllAccounts(Integer page, Integer size, String condition) {
+        return new IPage<>(new SelectCommon<SysAccount>().findAll(page, size, condition, this));
     }
 
     @Override

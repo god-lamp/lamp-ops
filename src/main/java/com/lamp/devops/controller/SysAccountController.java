@@ -25,19 +25,19 @@ public class SysAccountController {
     @Resource
     private ISysAccountService accountService;
 
-    @GetMapping("/")
+    @GetMapping()
     @Parameters({
-            @Parameter(name = "num", description = "页码"),
+            @Parameter(name = "page", description = "页码"),
             @Parameter(name = "size", description = "每页大小"),
             @Parameter(name = "condition", description = "查询条件")
     })
-    public IPage<SysAccount> findAllAccounts(@RequestParam(defaultValue = "1", required = false) Integer num,
+    public IPage<SysAccount> findAllAccounts(@RequestParam(defaultValue = "1", required = false) Integer page,
                                              @RequestParam(defaultValue = "20", required = false) Integer size,
                                              @RequestParam(defaultValue = "", required = false) String condition) {
-        return accountService.findAllAccounts(num, size, condition);
+        return accountService.findAllAccounts(page, size, condition);
     }
 
-    @PostMapping("/")
+    @PostMapping()
     public long addAccount(SysAccountDto account) {
         return accountService.addAccount(account);
     }
@@ -47,7 +47,7 @@ public class SysAccountController {
         return accountService.updateAccount(userId, account);
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping()
     public boolean delAccount(List<Long> userIds) {
         return accountService.delAccount(userIds);
     }
