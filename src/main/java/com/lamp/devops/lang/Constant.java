@@ -23,6 +23,7 @@ public class Constant {
     public static final List<Pair<HttpMethod, String>> AUTHENTICATION_LIST = new LinkedList<>();
 
     static {
+        WHITES.add(Pair.of(HttpMethod.GET, "/**"));
         WHITES.add(Pair.of(HttpMethod.POST, "/login"));
         WHITES.add(Pair.of(HttpMethod.POST, "/logout"));
         WHITES.add(Pair.of(HttpMethod.GET, "/verify"));

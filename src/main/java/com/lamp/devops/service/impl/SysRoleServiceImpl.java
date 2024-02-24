@@ -42,8 +42,8 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     private ISysRoleMenuService roleMenuService;
 
     @Override
-    public IPage<SysRole> findAllRoles(Integer num, Integer size, String condition) {
-        return new IPage<>(new SelectCommon<SysRole>().findAll(num, size, condition, this));
+    public IPage<SysRole> findAllRoles(Integer page, Integer size, String condition) {
+        return new IPage<>(new SelectCommon<SysRole>().findAll(page, size, condition, this));
     }
 
     @Override

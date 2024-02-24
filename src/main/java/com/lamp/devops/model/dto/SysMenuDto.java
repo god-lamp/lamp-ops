@@ -1,5 +1,7 @@
 package com.lamp.devops.model.dto;
 
+import com.lamp.devops.model.SaveValidation;
+import com.lamp.devops.model.UpdateValidation;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -10,7 +12,7 @@ import lombok.Data;
  */
 @Data
 public class SysMenuDto {
-    @NotNull(message = "父ID不能为空")
+    @NotNull(message = "父ID不能为空!", groups = {SaveValidation.class, UpdateValidation.class})
     private Long parentId;
 
     /**
@@ -21,13 +23,13 @@ public class SysMenuDto {
     /**
      * 名称
      */
-    @NotBlank(message = "名称不能为空")
+    @NotBlank(message = "名称不能为空", groups = {SaveValidation.class, UpdateValidation.class})
     private String name;
 
     /**
      * 权限编码
      */
-    @NotBlank(message = "权限编码不能为空")
+    @NotBlank(message = "权限编码不能为空", groups = {SaveValidation.class, UpdateValidation.class})
     private String code;
 
     private String url;
@@ -40,7 +42,7 @@ public class SysMenuDto {
     /**
      * 类型
      */
-    @NotBlank(message = "菜单类型不能为空")
+    @NotNull(message = "菜单类型不能为空", groups = {SaveValidation.class, UpdateValidation.class})
     private Integer type;
 
     /**
@@ -56,7 +58,7 @@ public class SysMenuDto {
     /**
      * 是否隐藏
      */
-    private Integer hidden;
+    private Boolean hidden;
 
     /**
      * 描述信息

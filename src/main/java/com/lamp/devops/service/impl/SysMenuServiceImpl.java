@@ -2,19 +2,22 @@ package com.lamp.devops.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
-import com.lamp.devops.common.SelectCommon;
+import cn.hutool.core.util.StrUtil;
 import com.lamp.devops.entity.SysMenu;
-import com.lamp.devops.lang.IPage;
 import com.lamp.devops.mapper.SysMenuMapper;
 import com.lamp.devops.model.dto.SysMenuDto;
 import com.lamp.devops.service.ISysMenuService;
 import com.lamp.devops.service.ISysRoleMenuService;
+import com.lamp.devops.utils.ParamUtil;
+import com.mybatisflex.core.query.QueryColumn;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -24,7 +27,7 @@ import static com.lamp.devops.entity.table.SysMenuTableDef.SYS_MENU;
 import static com.lamp.devops.entity.table.SysRoleMenuTableDef.SYS_ROLE_MENU;
 
 /**
- *  服务层实现。
+ * 服务层实现。
  *
  * @author god-lamp
  * @since 2024-02-20
@@ -35,8 +38,16 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     private ISysRoleMenuService roleMenuService;
 
     @Override
-    public IPage<SysMenu> findAllMenus(Integer num, Integer size, String condition) {
-        return new IPage<>(new SelectCommon<SysMenu>().findAll(num, size, condition, this));
+    public List<SysMenu> findAllMenus(String condition) {
+        QueryWrapper wrapper = QueryWrapper.create().where("1 = 1");
+        if (StrUtil.isNotBlank(condition)) {
+            Map<String, Object> map = ParamUtil.split(condition);
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                wrapper.and(new QueryColumn(entry.getKey()).like(entry.getValue()));
+            }
+        }
+        List<SysMenu> menus = this.list(wrapper);
+        return menus.stream().filter(menu -> menu.getParentId().equals(0L)).map(menu -> covertMenuNode(menu, menus)).toList();
     }
 
     @Override
@@ -59,6 +70,16 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
                         .leftJoin(SYS_ACCOUNT_ROLE).on(SYS_ACCOUNT_ROLE.ROLE_ID.eq(SYS_ROLE_MENU.ROLE_ID))
                         .where(SYS_ACCOUNT_ROLE.ACCOUNT_ID.eq(accountId))
         );
+    }
+
+    @Override
+    public Map<Long, String> fetchParentMenuByType(Long type) {
+        if (type > 3 || type < 2) {
+            throw new IllegalStateException("传入的菜单类型不合法");
+        }
+        List<SysMenu> menus = this.list(QueryWrapper.create().where(SYS_MENU.TYPE.eq(type - 1)));
+
+        return menus.stream().collect(Collectors.toMap(SysMenu::getId,SysMenu::getName));
     }
 
     @Override
@@ -90,5 +111,18 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
             throw new IllegalStateException("删除菜单项失败");
         }
         return true;
+    }
+
+    /**
+     * 将UmsMenu转化为UmsMenuNode并设置children属性
+     */
+    private SysMenu covertMenuNode(SysMenu menu, List<SysMenu> menus) {
+        SysMenu node = new SysMenu();
+        BeanUtils.copyProperties(menu, node);
+        List<SysMenu> children = menus.stream()
+                .filter(subMenu -> subMenu.getParentId().equals(menu.getId()))
+                .map(subMenu -> covertMenuNode(subMenu, menus)).collect(Collectors.toList());
+        node.setChildren(children);
+        return node;
     }
 }

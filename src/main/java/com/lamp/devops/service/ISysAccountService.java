@@ -19,11 +19,11 @@ public interface ISysAccountService extends IService<SysAccount> {
      * 查询所有账户信息
      *
      * @param page      页码
-     * @param size      每页大小
+     * @param limit      每页大小
      * @param condition 查询条件
      * @return 分页对象
      */
-    IPage<SysAccount> findAllAccounts(Integer page, Integer size, String condition);
+    IPage<SysAccount> findAllAccounts(Integer page, Integer limit, String condition);
 
     /**
      * 根据用户名查询用户信息

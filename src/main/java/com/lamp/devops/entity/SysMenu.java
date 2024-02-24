@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  *  实体类。
@@ -84,5 +85,11 @@ public class SysMenu implements Serializable {
      */
     @Column(onInsertValue = "now()")
     private LocalDateTime createTime;
+
+    /**
+     * 子菜单
+     */
+    @Column(ignore = true)
+    private List<SysMenu> children;
 
 }

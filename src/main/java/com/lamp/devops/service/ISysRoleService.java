@@ -17,12 +17,12 @@ public interface ISysRoleService extends IService<SysRole> {
     /**
      * 查询所有角色信息
      *
-     * @param num       分页对象
-     * @param size      关键信息
+     * @param page       页码
+     * @param limit      条目
      * @param condition 查询条件
      * @return 分页对象
      */
-    IPage<SysRole> findAllRoles(Integer num, Integer size, String condition);
+    IPage<SysRole> findAllRoles(Integer page, Integer limit, String condition);
 
     /**
      * 根据角色名查询角色信息

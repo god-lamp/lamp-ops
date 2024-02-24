@@ -4,13 +4,15 @@ import com.lamp.devops.entity.SysRole;
 import com.lamp.devops.lang.IPage;
 import com.lamp.devops.model.dto.SysRoleDto;
 import com.lamp.devops.service.ISysRoleService;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
 /**
- *  控制层。
+ * 控制层。
  *
  * @author god-lamp
  * @since 2024-02-20
@@ -28,7 +30,7 @@ public class SysRoleController {
      * @param roleDto 角色信息
      * @return {@code true} 添加成功，{@code false} 添加失败
      */
-    @PostMapping("/")
+    @PostMapping()
     public long save(@RequestBody SysRoleDto roleDto) {
         return roleService.addRole(roleDto);
     }
@@ -39,7 +41,7 @@ public class SysRoleController {
      * @param roleIds 主键列表
      * @return {@code true} 删除成功，{@code false} 删除失败
      */
-    @DeleteMapping("/")
+    @DeleteMapping()
     public boolean remove(@RequestBody Set<Long> roleIds) {
         return roleService.delRole(roleIds);
     }
@@ -59,14 +61,21 @@ public class SysRoleController {
     /**
      * 分页查询。
      *
-     * @param num       页码
-     * @param size      每页大小
+     * @param page      页码
+     * @param limit     每页大小
      * @param condition 查询条件
      * @return 分页对象
      */
-    @GetMapping("/")
-    public IPage<SysRole> page(Integer num, Integer size, String condition) {
-        return roleService.findAllRoles(num, size, condition);
+    @GetMapping()
+    @Parameters({
+            @Parameter(name = "page", description = "页码"),
+            @Parameter(name = "limit", description = "每页大小"),
+            @Parameter(name = "condition", description = "查询条件")
+    })
+    public IPage<SysRole> page(@RequestParam(defaultValue = "1", required = false) Integer page,
+                               @RequestParam(defaultValue = "20", required = false) Integer limit,
+                               @RequestParam(defaultValue = "", required = false) String condition) {
+        return roleService.findAllRoles(page, limit, condition);
     }
 
 }
